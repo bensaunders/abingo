@@ -5,6 +5,8 @@ class Abingo::Experiment < ActiveRecord::Base
   has_many :alternatives, :dependent => :destroy, :class_name => "Abingo::Alternative"
   validates_uniqueness_of :test_name
 
+  named_scope :sorted, :order => "created_at desc"
+
   def cache_keys
   ["Abingo::Experiment::exists(#{test_name})".gsub(" ", "_"),
     "Abingo::Experiment::#{test_name}::alternatives".gsub(" ","_"),

@@ -5,7 +5,7 @@ class Abingo
       ActionController::Base.view_paths.unshift File.join(File.dirname(__FILE__), "../views")
       
       def index
-        @experiments = Abingo::Experiment.all
+        @experiments = Abingo::Experiment.sorted
         render :template => 'dashboard/index'
       end
 

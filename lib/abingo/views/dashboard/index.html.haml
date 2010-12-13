@@ -1,0 +1,4 @@
+#abingo_dashboard
+  - title "Experiment results"
+  - @experiments.each do |experiment|
+    = render :partial => "dashboard/experiment", :locals => {:experiment => experiment}

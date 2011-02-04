@@ -62,29 +62,32 @@ module Abingo::Statistics
     p = p_value
 
     words = ""
-    if (alternatives[0].participants < 10) || (alternatives[1].participants < 10)
-      words += "Take these results with a grain of salt since your samples are so small: "
-    end
+    if (alternatives[0].conversions > 0) || (alternatives[1].conversions > 0)
+      if (alternatives[0].participants < 10) || (alternatives[1].participants < 10)
+        words += "Take these results with a grain of salt since your samples are so small: "
+      end
 
-    alts = alternatives - [best_alternative]
-    worst_alternative = alts.first
+      alts = alternatives - [best_alternative]
+      worst_alternative = alts.first
 
-    words += "The best alternative you have is: [#{best_alternative.content}], which had "
-    words += "#{best_alternative.conversions} conversions from #{best_alternative.participants} participants "
-    words += "(#{best_alternative.pretty_conversion_rate}).  The other alternative was [#{worst_alternative.content}], "
-    words += "which had #{worst_alternative.conversions} conversions from #{worst_alternative.participants} participants "
-    words += "(#{worst_alternative.pretty_conversion_rate}).  "
+      words += "The best alternative you have is: [#{best_alternative.content}], which had "
+      words += "#{best_alternative.conversions} conversions from #{best_alternative.participants} participants "
+      words += "(#{best_alternative.pretty_conversion_rate}).  The other alternative was [#{worst_alternative.content}], "
+      words += "which had #{worst_alternative.conversions} conversions from #{worst_alternative.participants} participants "
+      words += "(#{worst_alternative.pretty_conversion_rate}).  "
 
-    if (p.nil?)
-      words += "However, this difference is not statistically significant."
+      if (p.nil?)
+        words += "However, this difference is not statistically significant."
+      else
+        words += "This difference is #{PERCENTAGES[p]} likely to be statistically significant, which means you can be "
+        words += "#{DESCRIPTION_IN_WORDS[p]} that it is the result of your alternatives actually mattering, rather than "
+        words += "being due to random chance.  However, this statistical test can't measure how likely the currently "
+        words += "observed magnitude of the difference is to be accurate or not.  It only says \"better\", not \"better "
+        words += "by so much\"."
+      end
     else
-      words += "This difference is #{PERCENTAGES[p]} likely to be statistically significant, which means you can be "
-      words += "#{DESCRIPTION_IN_WORDS[p]} that it is the result of your alternatives actually mattering, rather than "
-      words += "being due to random chance.  However, this statistical test can't measure how likely the currently "
-      words += "observed magnitude of the difference is to be accurate or not.  It only says \"better\", not \"better "
-      words += "by so much\"."
+      words = "Could not execute the significance test because neither of the alternatives have led to any conversions yet."
     end
     words
   end
-
 end

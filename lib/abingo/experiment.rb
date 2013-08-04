@@ -6,6 +6,7 @@ class Abingo::Experiment < ActiveRecord::Base
   validates_uniqueness_of :test_name
 
   named_scope :sorted, :order => "created_at desc"
+  named_scope :latest, :order => "created_at desc", :limit => 1
 
   def cache_keys
   ["Abingo::Experiment::exists(#{test_name})".gsub(" ", "_"),

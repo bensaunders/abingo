@@ -9,6 +9,11 @@ class Abingo
         render :template => 'dashboard/index'
       end
 
+      def latest
+        @experiments = Abingo::Experiment.latest
+        render :template => 'dashboard/index'
+      end
+
       def end_experiment
         @alternative = Abingo::Alternative.find(params[:id])
         @experiment = Abingo::Experiment.find(@alternative.experiment_id)

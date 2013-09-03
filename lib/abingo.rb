@@ -75,15 +75,18 @@ class Abingo
     unless Abingo::Experiment.exists?(test_name)
       lock_key = test_name.gsub(" ", "_")
       if Abingo.cache.exist?(lock_key)
+        creation_required = false
         while Abingo.cache.exist?(lock_key)
           sleep(0.1)
         end
-        break
+        creation_required = Abingo::Experiment.exists?(test_name)
       end
-      Abingo.cache.write(lock_key, 1, :expires_in => 5.seconds)
-      conversion_name = options[:conversion] || options[:conversion_name]
-      Abingo::Experiment.start_experiment!(test_name, self.parse_alternatives(alternatives), conversion_name)
-      Abingo.cache.delete(lock_key)
+      if creation_required
+        Abingo.cache.write(lock_key, 1, :expires_in => 5.seconds)
+        conversion_name = options[:conversion] || options[:conversion_name]
+        Abingo::Experiment.start_experiment!(test_name, self.parse_alternatives(alternatives), conversion_name)
+        Abingo.cache.delete(lock_key)
+      end
     end
 
     choice = self.find_alternative_for_user(test_name, alternatives)
